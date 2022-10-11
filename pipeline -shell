@@ -1,0 +1,30 @@
+node{
+
+echo "build nun: ${env. BUILD_NUMBER}"
+
+ 
+def maveHome = tool name: 'maven3.8.6'
+
+stage('checkoutcodefromgithub'){
+git branch: 'development', credentialsId: '7a29b8c6-4b60-4b87-b7aa-370e670f98a1', url: 'https://github.com/mss-augbatch2022/maven-web-application.git'
+} 
+
+stage('buildthecodeinmaven') {
+ sh "${maveHome}/bin/mvn clean package"
+ }
+ 
+stage('sonarqube report') {
+ sh "${maveHome}/bin/mvn clean sonar:sonar"
+ }
+
+stage('nexus artifactory') {
+ sh "${maveHome}/bin/mvn clean deploy"
+ }
+
+stage('deploy into tomcat') {
+sshagent(['25adfaa3-eead-409e-9ac4-eca932c831a5']){
+sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@172.31.39.102:/opt/apache-tomcat-9.0.65/webapps"
+}
+} 
+
+}
