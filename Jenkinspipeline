@@ -1,7 +1,8 @@
+@Library(shared_library) _
 node('walmartnode'){
 
 try{
-  slackNotifications('STARTED')
+  sendslackNotifications('STARTED')
 
 def mavenHome = tool name: "maven3.8.6"
 
@@ -45,9 +46,10 @@ sshagent(['dc292b7a-3b39-4630-9fc3-1b806b54412c']) {
   throw e
   }//catch closing
   finally{
-  slackNotifications(currentBuild.result)
+  sendslackNotifications(currentBuild.result)
   }
 } //Node closing
+/*
 //Code Snippet for sending slack notifications.
 def slackNotifications(String buildStatus = 'STARTED') {
   // build status of null means successful
@@ -74,3 +76,4 @@ def slackNotifications(String buildStatus = 'STARTED') {
   slackSend (color: colorCode, message: summary)
   slackSend (color: colorCode, message: summary)
 }
+*/
