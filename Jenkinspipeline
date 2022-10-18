@@ -1,5 +1,5 @@
 @Library(shared_library) _
-node('walmartnode'){
+node{
 
 try{
   sendslackNotifications('STARTED')
